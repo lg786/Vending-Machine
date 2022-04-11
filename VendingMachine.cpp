@@ -26,6 +26,7 @@ int main()
     switch (choice)
     {
         case 1:
+            map<int,int> order;
             while(true)
             {
                 cout<<"Description\tID\tQuantity\tPrice\n";
@@ -35,7 +36,6 @@ int main()
                 }
                 cout<<"\n\nEnter Item ID and Quantity for each item you want to purchase.\nWhen done please enter -1.\n\n";
                 int itemCode=0,quantity=0;
-                map<int,int> order;
                 while(true)
                 {
                     cin >> itemCode;
@@ -66,7 +66,7 @@ int main()
                 }
                 if(order.empty()==false)
                 {
-                    cout << "Your order is below.\nItem ID \tQuantity\n";
+                    cout << "\nYour order is below.\nItem ID \tQuantity\n";
                     map<int, int>::iterator itr;
                     for(itr=order.begin();itr!=order.end();++itr)
                         cout << itr->first << "\t\t" << itr->second << endl;
@@ -83,6 +83,14 @@ int main()
                 else
                     break;
             }
+            map<int, int>::iterator itr;
+            int cost=0;
+            for(itr=order.begin();itr!=order.end();++itr)
+            {
+                items[itr->first-1].second.second.first=items[itr->first-1].second.second.first-itr->second;
+                cost=cost+itr->second*items[itr->first-1].second.second.second;
+            }
+            cout << "\nFinal Price to Pay: " << cost << endl;
     }
 
     return 0;
