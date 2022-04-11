@@ -41,28 +41,29 @@ int main()
                     cin >> itemCode;
                     if(itemCode==-1)
                         break;
-                    else if(order.find(itemCode)!=order.end())
-                    {
-                        cout<<"This item has already been purchased.\n";
-                    }
-                    else if(itemCode>=1 && itemCode<=9)
+                    else
                     {
                         cin >> quantity;
-                        if(quantity>items[itemCode-1].second.second.first)
+                        if(order.find(itemCode)!=order.end())
+                            cout<<"This item has already been purchased.\n";
+                        else if(itemCode>=1 && itemCode<=9)
                         {
-                            cout << "Quantity you wish to purchase exceeds quantity in Vending Machine.\nQuantity Available: "<<items[itemCode-1].second.second.first<<endl;
-                            cout << "If you wish to change your amount please re-enter the quantity else if you do not want to buy this item enter -1\n";
-                            cin >> quantity;
-                            if(quantity==-1)
-                                continue;
+                            if(quantity>items[itemCode-1].second.second.first)
+                            {
+                                cout << "Quantity you wish to purchase exceeds quantity in Vending Machine.\nQuantity Available: "<<items[itemCode-1].second.second.first<<endl;
+                                cout << "If you wish to change your amount please re-enter the quantity else if you do not want to buy this item enter -1\n";
+                                cin >> quantity;
+                                if(quantity==-1)
+                                    continue;
+                                else
+                                    order.insert(pair<int,int>(itemCode,quantity));
+                            }
                             else
                                 order.insert(pair<int,int>(itemCode,quantity));
                         }
                         else
-                            order.insert(pair<int,int>(itemCode,quantity));
+                            cout << "Invalid Item ID\n";
                     }
-                    else
-                        cout << "Invalid Item ID\n";
                 }
                 if(order.empty()==false)
                 {
@@ -73,8 +74,6 @@ int main()
                     int confirm=-2;
                     cout << "Please confirm your order. Enter 1 to confirm, 0 to redo the order or -1 to exit." << endl;
                     cin >> confirm;
-                    //if (confirm==1)
-                       // break;
                     if(confirm==-1)
                         return 0;
                     else if(confirm==0)
@@ -123,7 +122,7 @@ int main()
                     {
                         int chng=amt-cost;
                         map<int,int> change;
-                        for(itr=money.end();itr!=money.begin();--itr)
+                        for(auto itr=money.rbegin();itr!=money.rend();++itr)
                         {
                             if((int)(chng/itr->first)!=0 && (int)(chng/itr->first)<=itr->second)
                             {
@@ -136,13 +135,26 @@ int main()
                                 chng=chng-(itr->first)*(itr->second);
                             }
                         }
-                        cout << "\n Please accept your change.\nDenomination\tNumber of Notes\n";
-                        for(itr=change.begin();itr!=change.end();++itr)
+                        if(chng==0)
                         {
-                            cout << itr->first << "\t\t" << itr->second << endl;
+                            cout << "\nPlease accept your change.\nDenomination\tNumber of Notes\n";
+                            for(itr=change.begin();itr!=change.end();++itr)
+                            {
+                                cout << itr->first << "\t\t" << itr->second << endl;
+                            }
+                            cout << "\nThank you for using the Vending Machine.\n";
+                            break;
                         }
-                        cout << "\nThank you for using the Vending Machine.\n";
-                        break;
+                        else
+                        {
+                            cout << "\nNot enough change in the machine. Please take your money back.";
+                            cout << "Change remaining: " << chng;
+                            for(itr=pay.begin();itr!=pay.end();++itr)
+                            {
+                                money.insert(pair<int,int>(itr->first,itr->second-money.find(itr->first)->second));
+                            }
+                            break;
+                        }
                     }
                     else
                     {
@@ -152,8 +164,7 @@ int main()
                 }
                 else
                     break;
-            }
-            
+            }            
     }
 
     return 0;
