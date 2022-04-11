@@ -73,9 +73,9 @@ int main()
                     int confirm=-2;
                     cout << "Please confirm your order. Enter 1 to confirm, 0 to redo the order or -1 to exit." << endl;
                     cin >> confirm;
-                    if (confirm==1)
-                        break;
-                    else if(confirm==-1)
+                    //if (confirm==1)
+                       // break;
+                    if(confirm==-1)
                         return 0;
                     else if(confirm==0)
                     {
@@ -111,12 +111,39 @@ int main()
                             continue;
                         }
                         else
+                        {
+                            for(itr=pay.begin();itr!=pay.end();++itr)
+                            {
+                                money.insert(pair<int,int>(itr->first,itr->second+money.find(itr->first)->second));
+                            }
                             break;
+                        }
                     }
                     if(amt>cost)
                     {
-                        int change=amt-cost;
-                     }
+                        int chng=amt-cost;
+                        map<int,int> change;
+                        for(itr=money.end();itr!=money.begin();--itr)
+                        {
+                            if((int)(chng/itr->first)!=0 && (int)(chng/itr->first)<=itr->second)
+                            {
+                                change.insert(pair<int,int>(itr->first,(int)(chng/itr->first)));
+                                chng=chng-((int)((chng/itr->first)))*itr->first;
+                            }
+                            else if((int)(chng/itr->first)!=0 && (int)(chng/itr->first)>itr->second)
+                            {
+                                change.insert(pair<int,int>(itr->first,itr->second));
+                                chng=chng-(itr->first)*(itr->second);
+                            }
+                        }
+                        cout << "\n Please accept your change.\nDenomination\tNumber of Notes\n";
+                        for(itr=change.begin();itr!=change.end();++itr)
+                        {
+                            cout << itr->first << "\t\t" << itr->second << endl;
+                        }
+                        cout << "\nThank you for using the Vending Machine.\n";
+                        break;
+                    }
                     else
                     {
                         cout << "Payment Accepted.\nThank you for using the Vending Machine.\n";
