@@ -50,7 +50,7 @@ int main()
                         cin >> quantity;
                         if(quantity>items[itemCode-1].second.second.first)
                         {
-                            cout << "Quantity you wish to purchase exceeds quantity in Vending Machine.\n Quantity Available: "<<items[itemCode-1].second.second.first<<endl;
+                            cout << "Quantity you wish to purchase exceeds quantity in Vending Machine.\nQuantity Available: "<<items[itemCode-1].second.second.first<<endl;
                             cout << "If you wish to change your amount please re-enter the quantity else if you do not want to buy this item enter -1\n";
                             cin >> quantity;
                             if(quantity==-1)
@@ -66,10 +66,10 @@ int main()
                 }
                 if(order.empty()==false)
                 {
-                    cout << "\nYour order is below.\nItem ID \tQuantity\n";
+                    cout << "\nYour order is below.\nDescription\tItem ID \tQuantity\n";
                     map<int, int>::iterator itr;
                     for(itr=order.begin();itr!=order.end();++itr)
-                        cout << itr->first << "\t\t" << itr->second << endl;
+                        cout << items[itr->first-1].first << "\t\t" << itr->first << "\t\t" << itr->second << endl;
                     int confirm=-2;
                     cout << "Please confirm your order. Enter 1 to confirm, 0 to redo the order or -1 to exit." << endl;
                     cin >> confirm;
@@ -78,19 +78,55 @@ int main()
                     else if(confirm==-1)
                         return 0;
                     else if(confirm==0)
+                    {
+                        order.clear();
                         continue;
+                    }
+                    int cost=0;
+                    for(itr=order.begin();itr!=order.end();++itr)
+                    {
+                        items[itr->first-1].second.second.first=items[itr->first-1].second.second.first-itr->second;
+                        cost=cost+itr->second*items[itr->first-1].second.second.second;
+                    }
+                    cout << "\nFinal Price to Pay: " << cost << endl;
+                    cout << "\nThe machine accepts only certain denominations.\nPlease enter number of notes of each denomination you wish to pay with.";
+                    int amt=0;
+                    map<int,int> pay;
+                    while(true)
+                    {
+                        for(itr=money.begin();itr!=money.end();++itr)
+                        {
+                            cout << "Enter the number of notes of the denomination Rs." << itr->first << endl;
+                            cin >> amt;
+                            pay.insert(pair<int,int>(itr->first,amt));
+                        }
+                        amt=0;
+                        for(itr=pay.begin();itr!=pay.end();++itr)
+                        {
+                            amt=amt+itr->first*itr->second;
+                        }
+                        if(amt<cost)
+                        {
+                            cout << "Full amount not paid\n"; 
+                            continue;
+                        }
+                        else
+                            break;
+                    }
+                    if(amt>cost)
+                    {
+                        int change=amt-cost;
+                     }
+                    else
+                    {
+                        cout << "Payment Accepted.\nThank you for using the Vending Machine.\n";
+                        return 0;
+                    }
                 }
                 else
                     break;
             }
-            map<int, int>::iterator itr;
-            int cost=0;
-            for(itr=order.begin();itr!=order.end();++itr)
-            {
-                items[itr->first-1].second.second.first=items[itr->first-1].second.second.first-itr->second;
-                cost=cost+itr->second*items[itr->first-1].second.second.second;
-            }
-            cout << "\nFinal Price to Pay: " << cost << endl;
+            
     }
 
     return 0;
