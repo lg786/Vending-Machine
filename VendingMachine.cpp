@@ -374,16 +374,16 @@ int main()
             }
            
             break;
-            case 5:
+             case 5:
             {   
+                vector<int> dlt;
+                int itemCode=0;      
                 cout << "Current items stock";
-                for(int i=0;i<9;i++)
+                for(int i=0;i<items.size();i++)
                 {
                     cout<<items[i].first<<"\t\t"<<items[i].second.first<<endl;
                 }
-                cout << "Enter itemID of item you want to clear:\nEnter - 1 when done\n";
-                vector<int> dlt;
-                int itemCode=0;             
+                cout << "Enter itemID of item you want to clear:\nEnter - 1 when done\n";       
                 while (true) 
                 {
                     cin >> itemCode;
@@ -391,55 +391,69 @@ int main()
                     {
                         if(dlt.empty()==false)
                         {
-                            for(int i=0;i<9;i++)
+                            cout<<"Item Code of Items to be cleared\n";
+                            for(int i=0;i<dlt.size();i++)
                             {
-                                cout<<"Items to be cleared\n";
-                                cout<<dlt[i];
+                                cout<<dlt[i]<<endl;
                             }   
                             int confirm=-2;
-                            cout << "Enter 1 to confirm your action, 0 to redo and -1 to exit";
+                            cout << "Enter 1 to confirm your action, 0 to redo and -1 to exit\n";
+                            cin >> confirm;
                             if(confirm==-1)
-                            return 0;
+                                break;
                             else if(confirm==0)
                             {
                                 dlt.clear();
+                                cout << "Current items stock:\n";
+                                for(int i=0;i<items.size();i++)
+                                {
+                                    cout<<items[i].first<<"\t\t"<<items[i].second.first<<endl;
+                                }
+                                cout << "Enter itemID of item you want to clear:\nEnter - 1 when done\n";
                                 continue;                             
                             }
-                            
-                            
-                            for(auto it1=dlt.begin();it1!=dlt.end();++it1)
+                            for(auto it1 = dlt.begin(); it1!=dlt.end();++it1)
                             {
-                                
-                                for(auto it2=items.begin();it2!=items.end();it2++)
+                                for(auto it2=items.begin(); it2!=items.end();++it2)
+                                {
+                                    if(*it1==it2->second.first)
                                     {
-                                        
-                                        for(*it1==it2->second.first)
-                                        {
-                                            items.erase(it2);
-                                        }
-
-
+                                        items.erase(it2);
+                                        break;
                                     }
-                                
+                                }
                             }
+                            cout<<"Updated Items in Vending Machine:\nDescription\tID\tQuantity\tPrice\n";
+                            for(int i=0;i<items.size();i++)
+                            {
+                                cout<<items[i].first<<"\t\t"<<items[i].second.first<<"\t"<<items[i].second.second.first<<"\t\t"<<items[i].second.second.second<<endl;
+                            }
+                            cout << "Thank you for using the Vending Machine.\n";
+                            break;
                         }
                         else
-                        break;
+                            break;
                     }
                     else
+                    {
+                        if(itemCode>=1 && itemCode<=9)
                         {
-                            if(itemCode>=1 && itemCode<=9)
-                            {
+                            if(find(dlt.begin(),dlt.end(),itemCode)==dlt.end())
                                 dlt.push_back(itemCode);
-                            }
-                            else 
-                            cout << "Invalid output\n";                        
+                            else
+                                cout << "You have already entered this value\n";
                         }
-                   
+                        else 
+                            cout << "Invalid Item Code\n";                        
+                    }
                 }
-            
+            }
             break;
-            }     
+            case 7:
+            return 0;
+            break;
+            default:
+            cout << "Invalid Option.\nPlease enter again.\n";        
         }
     }
     return 0;
